@@ -1,454 +1,687 @@
-import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, CheckCircle, AlertCircle } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Defense Proposal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-const ThesisDefenseProposal = () => {
-  const [expandedSections, setExpandedSections] = useState({});
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
 
-  const toggleSection = (section) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
 
-  const sections = [
-    {
-      id: 'intro',
-      title: 'INTRODUCTION',
-      content: (
-        <div className="space-y-4">
-          <p className="leading-relaxed">
-            Universities need strong reputations to attract students, staff, and partners. Employee advocacy, when staff promote the university's achievements and values, helps build trust and credibility (Clark, Chapleo, & Suomi, 2019; Santos et al., 2023).
-          </p>
-          <p className="leading-relaxed">
-            Many African universities, including health sciences institutions, do not fully engage staff in advocacy due to limited communication or a lack of formal programs (Yaping et al., 2023).
-          </p>
-          <p className="leading-relaxed">
-            This study explores how employees at Entrance University of Health Sciences act as brand ambassadors, what motivates or limits their advocacy, and how their actions impact the university's image.
-          </p>
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 5px solid #fbbf24;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .team-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .team-info p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .alert-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: start;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .alert-icon {
+            color: #10b981;
+            font-size: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .content-wrapper {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title h2 {
+            color: #1e3a8a;
+            font-size: 1.2em;
+        }
+
+        .badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .chevron {
+            color: #1e3a8a;
+            transition: transform 0.3s ease;
+            font-size: 24px;
+        }
+
+        .section.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: white;
+        }
+
+        .section.active .section-content {
+            max-height: 3000px;
+        }
+
+        .section-content-inner {
+            padding: 25px;
+        }
+
+        .theory-box {
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid;
+        }
+
+        .theory-blue {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .theory-green {
+            background: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .theory-purple {
+            background: #f3e8ff;
+            border-color: #a855f7;
+        }
+
+        .theory-box h3 {
+            margin-bottom: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .grid-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .grid-item h4 {
+            font-size: 0.9em;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        .grid-item p {
+            font-size: 0.85em;
+            color: #4b5563;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tips-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #fbbf24;
+            padding-bottom: 10px;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .tips-box li {
+            padding-left: 25px;
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .tips-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #fbbf24;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .subsection-title {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header .subtitle {
+                font-size: 1.1em;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Employee Advocacy as a Public Relations Strategy for Organizational Brand Promotion</h1>
+            <div class="subtitle">A Case Study of Entrance University of Health Sciences</div>
+            <div class="team-info">
+                <p><strong>Research Team:</strong></p>
+                <p>Delasi Fui Yao Amable – 10304018</p>
+                <p>Emelia Ayaw Awuku – 10304190</p>
+                <p>Persis Esi Donkoh - 10303298</p>
+                <p>Jadon Kyei-Mensah – 10304041</p>
+                <p style="margin-top: 15px;"><strong>Supervisor:</strong> Dr. Caroline A. A. Yegblemenawo</p>
+            </div>
         </div>
-      )
-    },
-    {
-      id: 'problem',
-      title: 'PROBLEM STATEMENT',
-      content: (
-        <div className="space-y-4">
-          <p className="leading-relaxed">
-            Employee advocacy is becoming a vital part of university branding in today's competitive higher-education environment, as staff who share positive stories and values can significantly enhance institutional reputation (Clark, Chapleo, & Suomi, 2019; Santos et al., 2023).
-          </p>
-          <p className="leading-relaxed">
-            At Entrance University of Health Sciences (EUHS), it is unclear how employees actually take part in advocacy, how they perceive their role as ambassadors, or how much their efforts influence the institution's visibility and brand strength. Research suggests that weak internal communication and limited support for internal branding frequently undermine staff engagement in brand-related behaviors (Ahmed, Shakur, Hashim, & Ahmed, 2024).
-          </p>
-          <p className="leading-relaxed">
-            These gaps may prevent EUHS from fully leveraging its employees' potential as authentic brand advocates. Therefore, this study investigates the types of advocacy undertaken by EUHS staff, the motivations and barriers they face, and how their advocacy shapes the university's public image.
-          </p>
+
+        <div class="alert-box">
+            <div class="alert-icon">✓</div>
+            <div>
+                <p><strong>Enhanced Sections</strong></p>
+                <p style="font-size: 0.9em;">Sections marked with a badge have been significantly improved or newly added</p>
+            </div>
         </div>
-      )
-    },
-    {
-      id: 'research_questions',
-      title: 'RESEARCH QUESTIONS',
-      improvement: true,
-      content: (
-        <div className="space-y-3">
-          <p className="font-semibold text-blue-900">Main Research Question:</p>
-          <p className="pl-4 leading-relaxed">How does employee advocacy function as a public relations strategy for brand promotion at Entrance University of Health Sciences?</p>
-          
-          <p className="font-semibold text-blue-900 mt-4">Specific Research Questions:</p>
-          <ol className="list-decimal pl-8 space-y-2">
-            <li>What forms and practices of employee advocacy currently exist at EUHS?</li>
-            <li>How do EUHS employees perceive their role in promoting the university brand?</li>
-            <li>What is the impact of employee advocacy on EUHS brand visibility and reputation?</li>
-            <li>What organizational factors enable or hinder employee advocacy at EUHS?</li>
-          </ol>
+
+        <div class="content-wrapper">
+            <!-- Introduction -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>INTRODUCTION</h2>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p>Universities need strong reputations to attract students, staff, and partners. Employee advocacy, when staff promote the university's achievements and values, helps build trust and credibility (Clark, Chapleo, & Suomi, 2019; Santos et al., 2023).</p>
+                        <p>Many African universities, including health sciences institutions, do not fully engage staff in advocacy due to limited communication or a lack of formal programs (Yaping et al., 2023).</p>
+                        <p>This study explores how employees at Entrance University of Health Sciences act as brand ambassadors, what motivates or limits their advocacy, and how their actions impact the university's image.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem Statement -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>PROBLEM STATEMENT</h2>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p>Employee advocacy is becoming a vital part of university branding in today's competitive higher-education environment, as staff who share positive stories and values can significantly enhance institutional reputation (Clark, Chapleo, & Suomi, 2019; Santos et al., 2023).</p>
+                        <p>At Entrance University of Health Sciences (EUHS), it is unclear how employees actually take part in advocacy, how they perceive their role as ambassadors, or how much their efforts influence the institution's visibility and brand strength. Research suggests that weak internal communication and limited support for internal branding frequently undermine staff engagement in brand-related behaviors (Ahmed, Shakur, Hashim, & Ahmed, 2024).</p>
+                        <p>These gaps may prevent EUHS from fully leveraging its employees' potential as authentic brand advocates. Therefore, this study investigates the types of advocacy undertaken by EUHS staff, the motivations and barriers they face, and how their advocacy shapes the university's public image.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Questions -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>RESEARCH QUESTIONS</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p class="subsection-title">Main Research Question:</p>
+                        <p style="padding-left: 20px;">How does employee advocacy function as a public relations strategy for brand promotion at Entrance University of Health Sciences?</p>
+                        
+                        <p class="subsection-title">Specific Research Questions:</p>
+                        <ol>
+                            <li>What forms and practices of employee advocacy currently exist at EUHS?</li>
+                            <li>How do EUHS employees perceive their role in promoting the university brand?</li>
+                            <li>What is the impact of employee advocacy on EUHS brand visibility and reputation?</li>
+                            <li>What organizational factors enable or hinder employee advocacy at EUHS?</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Objectives -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>RESEARCH OBJECTIVES</h2>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p class="subsection-title">General Objective:</p>
+                        <p style="padding-left: 20px;">To examine how employee advocacy supports brand promotion at EUHS.</p>
+                        
+                        <p class="subsection-title">Specific Objectives:</p>
+                        <ol>
+                            <li>To identify the forms and practices of employee advocacy currently used at EUHS.</li>
+                            <li>To assess employees' perceptions of their role in promoting the EUHS brand.</li>
+                            <li>To evaluate the impact of employee advocacy on EUHS brand visibility and reputation.</li>
+                            <li>To examine the organizational factors that enable or hinder employee advocacy at EUHS.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Literature Review -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>EXPANDED LITERATURE REVIEW</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p class="subsection-title">Employee Advocacy in Higher Education</p>
+                        <p>Employee advocacy refers to the voluntary promotion of an organization by its staff through both formal and informal channels (Van Camp, 2023). In universities, this includes sharing achievements on social media, recommending the institution to prospective students, defending university policies, and embodying institutional values in daily interactions.</p>
+                        
+                        <p class="subsection-title">Value Alignment and Brand Equity</p>
+                        <p>Employees are more likely to promote the university when their personal values match the institution's values (Clark, Chapleo, & Suomi, 2019). Value consonance strengthens connection to the brand and fosters employee-based brand equity (Yang et al., 2022). This alignment creates authentic advocacy that resonates more powerfully with external stakeholders than traditional marketing.</p>
+                        
+                        <p class="subsection-title">Internal Branding and Communication</p>
+                        <p>Effective internal branding requires consistent communication, leadership support, and organizational culture that values employee contribution (Duh & Wara, 2023). African universities often face challenges in this area due to hierarchical structures and limited resources for internal communication programs.</p>
+                        
+                        <p class="subsection-title">Research Gaps</p>
+                        <p>Most employee advocacy research focuses on Western contexts and digital advocacy. Limited studies examine non-digital advocacy or explore the phenomenon in African health sciences universities, where unique cultural and organizational factors may influence advocacy behaviors differently.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theoretical Framework -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>THEORETICAL FRAMEWORK</h2>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <div class="theory-box theory-blue">
+                            <h3>Social Exchange Theory (Blau, 1964)</h3>
+                            <p>Employees advocate when they feel valued, supported, and fairly treated. The theory posits that individuals engage in behaviors based on a cost-benefit analysis of their relationships. When universities invest in employees through recognition, development, and supportive environments, employees reciprocate through advocacy behaviors.</p>
+                        </div>
+                        
+                        <div class="theory-box theory-green">
+                            <h3>Intrinsic Motivation Theory (Deci & Ryan, 1985)</h3>
+                            <p>Emotional and internal drives encourage voluntary advocacy behaviors. This self-determination theory suggests that when employees experience autonomy, competence, and relatedness in their work environment, they are intrinsically motivated to promote their organization without external rewards.</p>
+                        </div>
+                        
+                        <div class="theory-box theory-purple">
+                            <h3>Value Alignment Theory (Clark, Chapleo, & Suomi, 2019)</h3>
+                            <p>Advocacy becomes authentic when employees' personal values match institutional values. This congruence creates psychological ownership and emotional attachment to the brand, leading to more genuine and persuasive advocacy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Methodology -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>ENHANCED METHODOLOGY</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p class="subsection-title">Research Design</p>
+                        <p>Qualitative case study design using interpretive phenomenological approach to explore employees' lived experiences and perceptions of brand advocacy at EUHS.</p>
+                        
+                        <p class="subsection-title">Research Population</p>
+                        <p>All permanent employees of Entrance University of Health Sciences across academic, administrative, and support staff categories.</p>
+                        
+                        <p class="subsection-title">Sampling Method & Justification</p>
+                        <p><strong>Purposive Sampling</strong> will be used to select information-rich participants who can provide deep insights into employee advocacy practices.</p>
+                        
+                        <p class="subsection-title">Sample Size & Composition</p>
+                        <p>15 participants selected to achieve theoretical saturation, distributed as follows:</p>
+                        <ul>
+                            <li>5 Academic staff (lecturers, professors across departments)</li>
+                            <li>5 Administrative staff (HR, communications, admissions)</li>
+                            <li>3 Support staff (IT, library, student services)</li>
+                            <li>2 Mid-level managers (heads of department, coordinators)</li>
+                        </ul>
+                        <p style="font-size: 0.9em; font-style: italic;">This size aligns with qualitative research conventions where 12-15 interviews typically achieve saturation (Guest et al., 2006).</p>
+                        
+                        <p class="subsection-title">Inclusion Criteria</p>
+                        <ul>
+                            <li>Minimum 1 year employment at EUHS</li>
+                            <li>Active engagement in university activities</li>
+                            <li>Willingness to participate voluntarily</li>
+                            <li>Diverse representation across departments and roles</li>
+                        </ul>
+                        
+                        <p class="subsection-title">Data Collection Instrument</p>
+                        <p>Semi-structured interviews (45-60 minutes each) with open-ended questions covering:</p>
+                        <ul>
+                            <li>Understanding of university brand and values</li>
+                            <li>Personal advocacy behaviors and motivations</li>
+                            <li>Perceived organizational support for advocacy</li>
+                            <li>Barriers to advocacy participation</li>
+                            <li>Impact perceptions of advocacy efforts</li>
+                        </ul>
+                        
+                        <p class="subsection-title">Data Collection Procedure</p>
+                        <ol>
+                            <li>Obtain ethical approval from university research committee</li>
+                            <li>Contact potential participants via email with information sheet</li>
+                            <li>Schedule interviews at participants' convenience</li>
+                            <li>Obtain written informed consent before each interview</li>
+                            <li>Audio-record interviews with permission</li>
+                            <li>Transcribe recordings verbatim within 48 hours</li>
+                        </ol>
+                        
+                        <p class="subsection-title">Data Analysis</p>
+                        <p>Thematic analysis using NVivo software following Braun & Clarke's (2006) six-phase framework:</p>
+                        <ol>
+                            <li>Familiarization with data through repeated reading</li>
+                            <li>Generating initial codes</li>
+                            <li>Searching for themes</li>
+                            <li>Reviewing and refining themes</li>
+                            <li>Defining and naming themes</li>
+                            <li>Producing the final report</li>
+                        </ol>
+                        
+                        <p class="subsection-title">Trustworthiness & Rigor</p>
+                        <ul>
+                            <li><strong>Credibility:</strong> Member checking and peer debriefing</li>
+                            <li><strong>Transferability:</strong> Thick description of context and participants</li>
+                            <li><strong>Dependability:</strong> Audit trail of all research decisions</li>
+                            <li><strong>Confirmability:</strong> Reflexive journal and triangulation with literature</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ethical Considerations -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>ETHICAL CONSIDERATIONS</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <ul>
+                            <li><strong>Informed Consent:</strong> All participants will receive detailed information about the study and sign consent forms</li>
+                            <li><strong>Confidentiality:</strong> Pseudonyms will be used; identifying information will be removed from transcripts</li>
+                            <li><strong>Voluntary Participation:</strong> Participants can withdraw at any time without penalty</li>
+                            <li><strong>Data Protection:</strong> All data will be stored securely and accessible only to research team</li>
+                            <li><strong>No Harm:</strong> Questions will avoid sensitive topics that could cause distress</li>
+                            <li><strong>Institutional Approval:</strong> Ethical clearance will be obtained from EUHS Research Ethics Committee</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Limitations -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>STUDY LIMITATIONS</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <ul>
+                            <li><strong>Generalizability:</strong> As a single case study, findings may not be transferable to other universities with different contexts</li>
+                            <li><strong>Self-Report Bias:</strong> Participants may overstate their advocacy behaviors due to social desirability</li>
+                            <li><strong>Sample Size:</strong> While appropriate for qualitative research, the sample may not capture all perspectives within EUHS</li>
+                            <li><strong>Time Constraints:</strong> Cross-sectional design captures perceptions at one point in time, not longitudinal changes</li>
+                            <li><strong>Researcher Bias:</strong> As researchers affiliated with communication studies, our interpretations may be influenced by theoretical predispositions (addressed through reflexivity)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Timeline -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>RESEARCH TIMELINE</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <div class="grid">
+                            <div class="grid-item">
+                                <h4>Weeks 1-2</h4>
+                                <p>Ethical approval & participant recruitment</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Weeks 3-5</h4>
+                                <p>Data collection (interviews)</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Weeks 6-8</h4>
+                                <p>Transcription & initial coding</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Weeks 9-11</h4>
+                                <p>Thematic analysis & interpretation</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Weeks 12-14</h4>
+                                <p>Report writing & member checking</p>
+                            </div>
+                            <div class="grid-item">
+                                <h4>Week 15</h4>
+                                <p>Final revisions & submission</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Significance -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>SIGNIFICANCE OF THE STUDY</h2>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <p class="subsection-title">Theoretical Contribution</p>
+                        <p>Extends employee advocacy theory to African higher education context, particularly health sciences universities.</p>
+                        
+                        <p class="subsection-title">Practical Implications</p>
+                        <p>Provides EUHS management with evidence-based insights for developing employee advocacy programs and internal branding strategies.</p>
+                        
+                        <p class="subsection-title">Policy Relevance</p>
+                        <p>Informs university communication policies and human resource practices to better engage staff in brand promotion.</p>
+                        
+                        <p class="subsection-title">Employee Empowerment</p>
+                        <p>Gives voice to employees' experiences and highlights their role as key stakeholders in institutional success.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expected Outcomes -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <div class="section-title">
+                        <h2>EXPECTED OUTCOMES</h2>
+                        <span class="badge">ENHANCED</span>
+                    </div>
+                    <div class="chevron">▼</div>
+                </div>
+                <div class="section-content">
+                    <div class="section-content-inner">
+                        <ul>
+                            <li>Comprehensive mapping of employee advocacy practices at EUHS</li>
+                            <li>Identification of key motivators and barriers to advocacy</li>
+                            <li>Framework for understanding advocacy impact on brand perception</li>
+                            <li>Practical recommendations for enhancing employee advocacy programs</li>
+                            <li>Contribution to academic literature on employee advocacy in African universities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-      )
-    },
-    {
-      id: 'objectives',
-      title: 'RESEARCH OBJECTIVES',
-      content: (
-        <div className="space-y-3">
-          <p className="font-semibold text-blue-900">General Objective:</p>
-          <p className="pl-4 leading-relaxed">To examine how employee advocacy supports brand promotion at EUHS.</p>
-          
-          <p className="font-semibold text-blue-900 mt-4">Specific Objectives:</p>
-          <ol className="list-decimal pl-8 space-y-2">
-            <li>To identify the forms and practices of employee advocacy currently used at EUHS.</li>
-            <li>To assess employees' perceptions of their role in promoting the EUHS brand.</li>
-            <li>To evaluate the impact of employee advocacy on EUHS brand visibility and reputation.</li>
-            <li>To examine the organizational factors that enable or hinder employee advocacy at EUHS.</li>
-          </ol>
-        </div>
-      )
-    },
-    {
-      id: 'literature',
-      title: 'EXPANDED LITERATURE REVIEW',
-      improvement: true,
-      content: (
-        <div className="space-y-4">
-          <div>
-            <p className="font-semibold text-blue-900">Employee Advocacy in Higher Education</p>
-            <p className="leading-relaxed mt-2">
-              Employee advocacy refers to the voluntary promotion of an organization by its staff through both formal and informal channels (Van Camp, 2023). In universities, this includes sharing achievements on social media, recommending the institution to prospective students, defending university policies, and embodying institutional values in daily interactions.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Value Alignment and Brand Equity</p>
-            <p className="leading-relaxed mt-2">
-              Employees are more likely to promote the university when their personal values match the institution's values (Clark, Chapleo, & Suomi, 2019). Value consonance strengthens connection to the brand and fosters employee-based brand equity (Yang et al., 2022). This alignment creates authentic advocacy that resonates more powerfully with external stakeholders than traditional marketing.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Internal Branding and Communication</p>
-            <p className="leading-relaxed mt-2">
-              Effective internal branding requires consistent communication, leadership support, and organizational culture that values employee contribution (Duh & Wara, 2023). African universities often face challenges in this area due to hierarchical structures and limited resources for internal communication programs.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Research Gaps</p>
-            <p className="leading-relaxed mt-2">
-              Most employee advocacy research focuses on Western contexts and digital advocacy. Limited studies examine non-digital advocacy or explore the phenomenon in African health sciences universities, where unique cultural and organizational factors may influence advocacy behaviors differently.
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'theory',
-      title: 'THEORETICAL FRAMEWORK',
-      content: (
-        <div className="space-y-4">
-          <div className="bg-blue-50 p-4 rounded">
-            <p className="font-semibold text-blue-900">Social Exchange Theory (Blau, 1964)</p>
-            <p className="leading-relaxed mt-2">
-              Employees advocate when they feel valued, supported, and fairly treated. The theory posits that individuals engage in behaviors based on a cost-benefit analysis of their relationships. When universities invest in employees through recognition, development, and supportive environments, employees reciprocate through advocacy behaviors.
-            </p>
-          </div>
-          
-          <div className="bg-green-50 p-4 rounded">
-            <p className="font-semibold text-green-900">Intrinsic Motivation Theory (Deci & Ryan, 1985)</p>
-            <p className="leading-relaxed mt-2">
-              Emotional and internal drives encourage voluntary advocacy behaviors. This self-determination theory suggests that when employees experience autonomy, competence, and relatedness in their work environment, they are intrinsically motivated to promote their organization without external rewards.
-            </p>
-          </div>
-          
-          <div className="bg-purple-50 p-4 rounded">
-            <p className="font-semibold text-purple-900">Value Alignment Theory (Clark, Chapleo, & Suomi, 2019)</p>
-            <p className="leading-relaxed mt-2">
-              Advocacy becomes authentic when employees' personal values match institutional values. This congruence creates psychological ownership and emotional attachment to the brand, leading to more genuine and persuasive advocacy.
-            </p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'methodology',
-      title: 'ENHANCED METHODOLOGY',
-      improvement: true,
-      content: (
-        <div className="space-y-4">
-          <div>
-            <p className="font-semibold text-blue-900">Research Design</p>
-            <p className="leading-relaxed mt-2">
-              Qualitative case study design using interpretive phenomenological approach to explore employees' lived experiences and perceptions of brand advocacy at EUHS.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Research Population</p>
-            <p className="leading-relaxed mt-2">
-              All permanent employees of Entrance University of Health Sciences across academic, administrative, and support staff categories.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Sampling Method & Justification</p>
-            <p className="leading-relaxed mt-2">
-              <span className="font-medium">Purposive Sampling</span> will be used to select information-rich participants who can provide deep insights into employee advocacy practices.
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Sample Size & Composition</p>
-            <p className="leading-relaxed mt-2">
-              15 participants selected to achieve theoretical saturation, distributed as follows:
-            </p>
-            <ul className="list-disc pl-8 mt-2 space-y-1">
-              <li>5 Academic staff (lecturers, professors across departments)</li>
-              <li>5 Administrative staff (HR, communications, admissions)</li>
-              <li>3 Support staff (IT, library, student services)</li>
-              <li>2 Mid-level managers (heads of department, coordinators)</li>
+
+        <div class="tips-box">
+            <h3>Defense Preparation Tips</h3>
+            <ul>
+                <li>Practice explaining your methodology choices and be ready to justify the 15-participant sample size</li>
+                <li>Prepare examples of potential interview questions you'll ask participants</li>
+                <li>Be ready to discuss how the three theories work together in your framework</li>
+                <li>Anticipate questions about generalizability and have responses prepared about transferability</li>
+                <li>Know your key references well, especially Clark et al. (2019) and Van Camp (2023)</li>
             </ul>
-            <p className="leading-relaxed mt-2 text-sm italic">
-              This size aligns with qualitative research conventions where 12-15 interviews typically achieve saturation (Guest et al., 2006).
-            </p>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Inclusion Criteria</p>
-            <ul className="list-disc pl-8 mt-2 space-y-1">
-              <li>Minimum 1 year employment at EUHS</li>
-              <li>Active engagement in university activities</li>
-              <li>Willingness to participate voluntarily</li>
-              <li>Diverse representation across departments and roles</li>
-            </ul>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Data Collection Instrument</p>
-            <p className="leading-relaxed mt-2">
-              Semi-structured interviews (45-60 minutes each) with open-ended questions covering:
-            </p>
-            <ul className="list-disc pl-8 mt-2 space-y-1">
-              <li>Understanding of university brand and values</li>
-              <li>Personal advocacy behaviors and motivations</li>
-              <li>Perceived organizational support for advocacy</li>
-              <li>Barriers to advocacy participation</li>
-              <li>Impact perceptions of advocacy efforts</li>
-            </ul>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Data Collection Procedure</p>
-            <ol className="list-decimal pl-8 mt-2 space-y-1">
-              <li>Obtain ethical approval from university research committee</li>
-              <li>Contact potential participants via email with information sheet</li>
-              <li>Schedule interviews at participants' convenience</li>
-              <li>Obtain written informed consent before each interview</li>
-              <li>Audio-record interviews with permission</li>
-              <li>Transcribe recordings verbatim within 48 hours</li>
-            </ol>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Data Analysis</p>
-            <p className="leading-relaxed mt-2">
-              Thematic analysis using NVivo software following Braun & Clarke's (2006) six-phase framework:
-            </p>
-            <ol className="list-decimal pl-8 mt-2 space-y-1">
-              <li>Familiarization with data through repeated reading</li>
-              <li>Generating initial codes</li>
-              <li>Searching for themes</li>
-              <li>Reviewing and refining themes</li>
-              <li>Defining and naming themes</li>
-              <li>Producing the final report</li>
-            </ol>
-          </div>
-          
-          <div>
-            <p className="font-semibold text-blue-900">Trustworthiness & Rigor</p>
-            <ul className="list-disc pl-8 mt-2 space-y-1">
-              <li><span className="font-medium">Credibility:</span> Member checking and peer debriefing</li>
-              <li><span className="font-medium">Transferability:</span> Thick description of context and participants</li>
-              <li><span className="font-medium">Dependability:</span> Audit trail of all research decisions</li>
-              <li><span className="font-medium">Confirmability:</span> Reflexive journal and triangulation with literature</li>
-            </ul>
-          </div>
         </div>
-      )
-    },
-    {
-      id: 'ethics',
-      title: 'ETHICAL CONSIDERATIONS',
-      improvement: true,
-      content: (
-        <div className="space-y-3">
-          <ul className="list-disc pl-8 space-y-2">
-            <li><span className="font-medium">Informed Consent:</span> All participants will receive detailed information about the study and sign consent forms</li>
-            <li><span className="font-medium">Confidentiality:</span> Pseudonyms will be used; identifying information will be removed from transcripts</li>
-            <li><span className="font-medium">Voluntary Participation:</span> Participants can withdraw at any time without penalty</li>
-            <li><span className="font-medium">Data Protection:</span> All data will be stored securely and accessible only to research team</li>
-            <li><span className="font-medium">No Harm:</span> Questions will avoid sensitive topics that could cause distress</li>
-            <li><span className="font-medium">Institutional Approval:</span> Ethical clearance will be obtained from EUHS Research Ethics Committee</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'limitations',
-      title: 'STUDY LIMITATIONS',
-      improvement: true,
-      content: (
-        <div className="space-y-3">
-          <ul className="list-disc pl-8 space-y-2">
-            <li><span className="font-medium">Generalizability:</span> As a single case study, findings may not be transferable to other universities with different contexts</li>
-            <li><span className="font-medium">Self-Report Bias:</span> Participants may overstate their advocacy behaviors due to social desirability</li>
-            <li><span className="font-medium">Sample Size:</span> While appropriate for qualitative research, the sample may not capture all perspectives within EUHS</li>
-            <li><span className="font-medium">Time Constraints:</span> Cross-sectional design captures perceptions at one point in time, not longitudinal changes</li>
-            <li><span className="font-medium">Researcher Bias:</span> As researchers affiliated with communication studies, our interpretations may be influenced by theoretical predispositions (addressed through reflexivity)</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'timeline',
-      title: 'RESEARCH TIMELINE',
-      improvement: true,
-      content: (
-        <div className="space-y-2">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Weeks 1-2</p>
-              <p className="text-sm">Ethical approval & participant recruitment</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Weeks 3-5</p>
-              <p className="text-sm">Data collection (interviews)</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Weeks 6-8</p>
-              <p className="text-sm">Transcription & initial coding</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Weeks 9-11</p>
-              <p className="text-sm">Thematic analysis & interpretation</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Weeks 12-14</p>
-              <p className="text-sm">Report writing & member checking</p>
-            </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <p className="font-semibold text-sm">Week 15</p>
-              <p className="text-sm">Final revisions & submission</p>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'significance',
-      title: 'SIGNIFICANCE OF THE STUDY',
-      content: (
-        <div className="space-y-3">
-          <div>
-            <p className="font-semibold text-blue-900">Theoretical Contribution</p>
-            <p className="leading-relaxed mt-1">Extends employee advocacy theory to African higher education context, particularly health sciences universities.</p>
-          </div>
-          <div>
-            <p className="font-semibold text-blue-900">Practical Implications</p>
-            <p className="leading-relaxed mt-1">Provides EUHS management with evidence-based insights for developing employee advocacy programs and internal branding strategies.</p>
-          </div>
-          <div>
-            <p className="font-semibold text-blue-900">Policy Relevance</p>
-            <p className="leading-relaxed mt-1">Informs university communication policies and human resource practices to better engage staff in brand promotion.</p>
-          </div>
-          <div>
-            <p className="font-semibold text-blue-900">Employee Empowerment</p>
-            <p className="leading-relaxed mt-1">Gives voice to employees' experiences and highlights their role as key stakeholders in institutional success.</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'expected',
-      title: 'EXPECTED OUTCOMES',
-      improvement: true,
-      content: (
-        <div className="space-y-3">
-          <ul className="list-disc pl-8 space-y-2">
-            <li>Comprehensive mapping of employee advocacy practices at EUHS</li>
-            <li>Identification of key motivators and barriers to advocacy</li>
-            <li>Framework for understanding advocacy impact on brand perception</li>
-            <li>Practical recommendations for enhancing employee advocacy programs</li>
-            <li>Contribution to academic literature on employee advocacy in African universities</li>
-          </ul>
-        </div>
-      )
-    }
-  ];
-
-  return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
-      <div className="mb-8 text-center border-b-4 border-blue-900 pb-6">
-        <h1 className="text-3xl font-bold text-blue-900 mb-4">
-          Employee Advocacy as a Public Relations Strategy for Organizational Brand Promotion
-        </h1>
-        <p className="text-xl text-gray-700 mb-4">
-          A Case Study of Entrance University of Health Sciences
-        </p>
-        <div className="text-sm text-gray-600 space-y-1">
-          <p className="font-semibold">Research Team:</p>
-          <p>Delasi Fui Yao Amable – 10304018</p>
-          <p>Emelia Ayaw Awuku – 10304190</p>
-          <p>Persis Esi Donkoh - 10303298</p>
-          <p>Jadon Kyei-Mensah – 10304041</p>
-          <p className="mt-3"><span className="font-semibold">Supervisor:</span> Dr. Caroline A. A. Yegblemenawo</p>
-        </div>
-      </div>
-
-      <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded">
-        <div className="flex items-start">
-          <CheckCircle className="w-5 h-5 text-green-600 mr-2 mt-1 flex-shrink-0" />
-          <div>
-            <p className="font-semibold text-green-900">Enhanced Sections</p>
-            <p className="text-sm text-green-800">Sections marked with a badge have been significantly improved or newly added</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        {sections.map((section) => (
-          <div key={section.id} className="border border-gray-300 rounded-lg overflow-hidden">
-            <button
-              onClick={() => toggleSection(section.id)}
-              className="w-full flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 transition-colors"
-            >
-              <div className="flex items-center">
-                <h2 className="text-lg font-bold text-blue-900">{section.title}</h2>
-                {section.improvement && (
-                  <span className="ml-3 px-2 py-1 bg-green-500 text-white text-xs rounded-full">
-                    ENHANCED
-                  </span>
-                )}
-              </div>
-              {expandedSections[section.id] ? (
-                <ChevronUp className="w-5 h-5 text-blue-900" />
-              ) : (
-                <ChevronDown className="w-5 h-5 text-blue-900" />
-              )}
-            </button>
-            {expandedSections[section.id] && (
-              <div className="p-4 bg-white">
-                {section.content}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-8 p-6 bg-blue-900 text-white rounded-lg">
-        <h3 className="text-xl font-bold mb-4">Defense Preparation Tips</h3>
-        <ul className="space-y-2 text-sm">
-          <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>Practice explaining your methodology choices and be ready to justify the 15-participant sample size</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>Prepare examples of potential interview questions you'll ask participants</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>Be ready to discuss how the three theories work together in your framework</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>Anticipate questions about generalizability and have responses prepared about transferability</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2">•</span>
-            <span>Know your key references well, especially Clark et al. (2019) and Van Camp (2023)</span>
-          </li>
-        </ul>
-      </div>
     </div>
-  );
-};
 
-export default ThesisDefenseProposal;
+    <script>
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('active');
+        }
+
+        // Optional: Open first section by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                firstSection.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
